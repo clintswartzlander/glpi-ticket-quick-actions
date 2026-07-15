@@ -1,0 +1,58 @@
+.quickactions-panel {
+  --qa-border: color-mix(in srgb, currentColor 18%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  color: var(--tblr-body-color, inherit);
+  background: var(--tblr-bg-surface, var(--tblr-card-bg, transparent));
+  border: 1px solid var(--tblr-border-color, var(--qa-border));
+  border-radius: var(--tblr-border-radius-lg, 0.5rem);
+}
+
+.quickactions-panel__heading,
+.quickactions-panel__actions,
+.quickactions-panel__button {
+  display: flex;
+  align-items: center;
+}
+
+.quickactions-panel__heading {
+  gap: 0.5rem;
+}
+
+.quickactions-panel__heading h3 {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.quickactions-panel__actions {
+  flex: 1 1 24rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.quickactions-panel__actions form {
+  margin: 0;
+}
+
+.quickactions-panel__button {
+  gap: 0.4rem;
+  min-height: 2.25rem;
+}
+
+@media (max-width: 575.98px) {
+  .quickactions-panel,
+  .quickactions-panel__actions,
+  .quickactions-panel__actions form,
+  .quickactions-panel__button {
+    width: 100%;
+  }
+
+  .quickactions-panel__button {
+    justify-content: center;
+  }
+}
