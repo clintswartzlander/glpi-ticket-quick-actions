@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: zip
+          coverage: none
+      - run: composer validate --strict
+      - run: composer lint
+      - run: composer test
+      - run: composer package
+      - uses: actions/upload-artifact@v4
+        if: matrix.php == '8.2'
+        with:
+          name: quickactions-release
+          path: build/quickactions-*.zip
+          if-no-files-found: error
