@@ -27,6 +27,7 @@ jobs:
       - run: composer validate --strict
       - run: composer lint
       - run: composer test
+      - run: node --check public/js/quickactions.js
       - run: composer package
       - uses: actions/upload-artifact@v4
         if: matrix.php == '8.2'

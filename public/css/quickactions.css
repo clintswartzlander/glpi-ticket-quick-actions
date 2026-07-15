@@ -35,19 +35,26 @@
   gap: 0.5rem;
 }
 
-.quickactions-panel__actions form {
-  margin: 0;
-}
-
 .quickactions-panel__button {
   gap: 0.4rem;
   min-height: 2.25rem;
 }
 
+.quickactions-panel__spinner {
+  display: none;
+}
+
+.quickactions-panel__button[aria-busy="true"] > .ti {
+  display: none;
+}
+
+.quickactions-panel__button[aria-busy="true"] > .quickactions-panel__spinner {
+  display: inline-block;
+}
+
 @media (max-width: 575.98px) {
   .quickactions-panel,
   .quickactions-panel__actions,
-  .quickactions-panel__actions form,
   .quickactions-panel__button {
     width: 100%;
   }

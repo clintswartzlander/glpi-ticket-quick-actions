@@ -38,14 +38,17 @@ final class PanelRenderer
 
         foreach ($actions as $action) {
             [$label, $icon] = $labels[$action];
-            echo '<form method="post" action="' . htmlescape($endpoint) . '">';
-            echo '<input type="hidden" name="_glpi_csrf_token" value="'
-                . htmlescape(\Session::getNewCSRFToken(true)) . '">';
-            echo '<input type="hidden" name="tickets_id" value="' . (int) $ticket->getID() . '">';
-            echo '<input type="hidden" name="action" value="' . htmlescape($action) . '">';
-            echo '<button type="submit" class="btn btn-outline-secondary quickactions-panel__button">';
+            echo '<button type="button" class="btn btn-outline-secondary quickactions-panel__button"';
+            echo ' data-quickactions-control="true"';
+            echo ' data-quickactions-endpoint="' . htmlescape($endpoint) . '"';
+            echo ' data-quickactions-csrf-token="'
+                . htmlescape(\Session::getNewCSRFToken(true)) . '"';
+            echo ' data-quickactions-ticket-id="' . (int) $ticket->getID() . '"';
+            echo ' data-quickactions-action="' . htmlescape($action) . '">';
             echo '<i class="' . htmlescape($icon) . '" aria-hidden="true"></i>';
-            echo '<span>' . htmlescape($label) . '</span></button></form>';
+            echo '<span class="spinner-border spinner-border-sm quickactions-panel__spinner"'
+                . ' aria-hidden="true"></span>';
+            echo '<span>' . htmlescape($label) . '</span></button>';
         }
 
         echo '</div></section>';

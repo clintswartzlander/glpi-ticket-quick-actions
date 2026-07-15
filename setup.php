@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Quickactions\PanelRenderer;
 
-define('PLUGIN_QUICKACTIONS_VERSION', '1.0.0');
+define('PLUGIN_QUICKACTIONS_VERSION', '1.0.1');
 define('PLUGIN_QUICKACTIONS_MIN_GLPI', '11.0.0');
 define('PLUGIN_QUICKACTIONS_MAX_GLPI', '12.0.0');
 
@@ -33,6 +33,7 @@ function plugin_init_quickactions(): void
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS[Hooks::ADD_CSS]['quickactions'] = 'css/quickactions.css';
+    $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['quickactions'] = 'js/quickactions.js';
     $PLUGIN_HOOKS[Hooks::POST_ITIL_INFO_SECTION]['quickactions'] = [PanelRenderer::class, 'render'];
 }
 

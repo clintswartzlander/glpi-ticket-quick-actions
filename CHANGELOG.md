@@ -4,6 +4,14 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-07-15
+
+### Fixed
+
+- Replaced invalid nested quick-action forms with `type="button"` controls and a scoped JavaScript normal-POST bridge.
+- Prevented duplicate handler registration and double-click action execution.
+- Verified that GLPI asset hook paths are relative to the plugin's `public/` directory.
+
 ## [1.0.0] - 2026-07-15
 
 ### Added
@@ -15,5 +23,6 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 - Responsive light/dark-compatible scoped styling.
 - Automated lint, contract tests, CI, release packaging, and manual QA documentation.
 
-[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/releases/tag/v1.0.0

@@ -6,21 +6,34 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Installation and rendering
 
-1. Confirm the plugin reports version 1.0.0, GPL-3.0-or-later, and installs without a database migration.
+1. Confirm the plugin reports version 1.0.1, GPL-3.0-or-later, and installs without a database migration.
 2. Open a new/unsaved Ticket form. Confirm the Quick Actions panel is absent.
 3. Open a saved Ticket in the central interface with a user who can view it. Confirm the panel is present and its buttons reflect the ticket state and rights.
-4. Switch to a Self-Service/helpdesk profile. Confirm the panel is absent.
-5. Test GLPI's light and dark themes at desktop and mobile widths. Confirm text, borders, focus states, wrapping, and button labels remain usable.
+4. Inspect the Ticket form DOM. Confirm the panel renders once, contains no nested `form`, and each action is a `button[type="button"]`.
+5. Switch to a Self-Service/helpdesk profile. Confirm the panel is absent.
+6. Test GLPI's light and dark themes at desktop and mobile widths. Confirm text, borders, focus states, wrapping, and button labels remain usable.
+
+## Submission architecture
+
+1. Open browser developer tools on a saved Ticket and preserve the Network log.
+2. Click **Assign to Me** once. Confirm the button disables immediately and shows its busy state.
+3. Confirm exactly one normal document POST is sent to `/plugins/quickactions/front/action.form.php` with `_glpi_csrf_token`, `tickets_id`, and `action` form fields.
+4. Confirm the response redirects to the canonical Ticket URL and the browser displays the updated ticket.
+5. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
+6. Exercise Assign to Me, Release Assignment, Pending, and Resume. Confirm all four use the same standalone POST mechanism.
+7. Reload or dynamically refresh the Ticket panel multiple times where possible. Confirm one click still produces one POST, demonstrating that the JavaScript handler registered only once.
+8. Confirm the browser console has no errors and the GLPI/PHP logs have no new warnings.
 
 ## Assign to Me
 
 1. As a technician with OWN, open an unassigned New ticket. Allow New -> Processing (Assigned) in the profile lifecycle matrix. Click **Assign to Me**.
 2. Confirm the current user is added as an assigned technician and the ticket becomes Processing (Assigned).
-3. Repeat with New -> Processing (Assigned) denied. Confirm assignment is added but status remains New.
-4. On a ticket already assigned to another technician and a group, test with STEAL. Confirm the current user is added and all existing actors remain.
-5. Repeat without STEAL. Confirm the action is hidden and a crafted POST is rejected.
-6. Submit the same logical action again after reloading. Confirm no duplicate relation is created.
-7. Confirm History contains native assignment/status entries and no followup was created.
+3. Confirm an existing assigned group remains assigned after the action.
+4. Repeat with New -> Processing (Assigned) denied. Confirm assignment is added but status remains New.
+5. On a ticket already assigned to another technician and a group, test with STEAL. Confirm the current user is added and all existing actors remain.
+6. Repeat without STEAL. Confirm the action is hidden and a crafted POST is rejected.
+7. Submit the same logical action again after reloading. Confirm no duplicate relation is created.
+8. Confirm History contains native assignment/status entries and no requester-visible followup was created.
 
 ## Release Assignment
 
