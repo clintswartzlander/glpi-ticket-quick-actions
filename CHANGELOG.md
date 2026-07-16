@@ -4,6 +4,13 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-07-16
+
+### Fixed
+
+- Reused GLPI's shared current-page CSRF token for every rendered quick action so standalone POSTs pass session validation.
+- Added contract coverage preventing standalone token generation and requiring one token generation before the action loop.
+
 ## [1.0.1] - 2026-07-15
 
 ### Fixed
@@ -23,6 +30,7 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 - Responsive light/dark-compatible scoped styling.
 - Automated lint, contract tests, CI, release packaging, and manual QA documentation.
 
-[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/releases/tag/v1.0.0

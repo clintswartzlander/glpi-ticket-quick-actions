@@ -6,7 +6,7 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Installation and rendering
 
-1. Confirm the plugin reports version 1.0.1, GPL-3.0-or-later, and installs without a database migration.
+1. Confirm the plugin reports version 1.0.2, GPL-3.0-or-later, and installs without a database migration.
 2. Open a new/unsaved Ticket form. Confirm the Quick Actions panel is absent.
 3. Open a saved Ticket in the central interface with a user who can view it. Confirm the panel is present and its buttons reflect the ticket state and rights.
 4. Inspect the Ticket form DOM. Confirm the panel renders once, contains no nested `form`, and each action is a `button[type="button"]`.
@@ -15,14 +15,16 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Submission architecture
 
-1. Open browser developer tools on a saved Ticket and preserve the Network log.
+1. Hard-refresh a saved Ticket page, open browser developer tools, and preserve the Network log.
 2. Click **Assign to Me** once. Confirm the button disables immediately and shows its busy state.
 3. Confirm exactly one normal document POST is sent to `/plugins/quickactions/front/action.form.php` with `_glpi_csrf_token`, `tickets_id`, and `action` form fields.
-4. Confirm the response redirects to the canonical Ticket URL and the browser displays the updated ticket.
-5. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
-6. Exercise Assign to Me, Release Assignment, Pending, and Resume. Confirm all four use the same standalone POST mechanism.
-7. Reload or dynamically refresh the Ticket panel multiple times where possible. Confirm one click still produces one POST, demonstrating that the JavaScript handler registered only once.
-8. Confirm the browser console has no errors and the GLPI/PHP logs have no new warnings.
+4. Confirm the POST returns a redirect rather than HTTP 403, the browser displays the canonical updated Ticket URL, and the assignment succeeds.
+5. Confirm no CSRF failure for the request appears in `access-errors.log`.
+6. Reopen or hard-refresh the Ticket page. Confirm it provides a fresh valid token and another available action redirects successfully.
+7. Exercise Pending, Resume, and Release Assignment. Confirm each passes CSRF validation and uses the same standalone POST mechanism.
+8. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
+9. Reload or dynamically refresh the Ticket panel multiple times where possible. Confirm one click still produces one POST, demonstrating that the JavaScript handler registered only once.
+10. Confirm the browser console has no errors and the GLPI/PHP logs have no new warnings.
 
 ## Assign to Me
 

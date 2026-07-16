@@ -2,7 +2,7 @@
 
 Ticket Quick Actions is a small GLPI 11 plugin that adds a dedicated action panel to saved Ticket pages in the standard interface.
 
-Current version: **1.0.1**
+Current version: **1.0.2**
 
 It provides four focused actions:
 
