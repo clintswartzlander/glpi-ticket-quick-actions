@@ -6,7 +6,7 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Installation and rendering
 
-1. Deploy version 1.0.4, clear the GLPI cache, and confirm the plugin reports version 1.0.4, GPL-3.0-or-later, with no database migration.
+1. Deploy version 1.1.0, clear the GLPI cache, and confirm the plugin reports version 1.1.0, GPL-3.0-or-later, with no database migration.
 2. Open a new/unsaved Ticket form. Confirm the Quick Actions panel is absent.
 3. Open a saved Ticket in the central interface with a user who can view it. Confirm the panel is present and its buttons reflect the ticket state and rights.
 4. Inspect the Ticket form DOM. Confirm the panel renders once, contains no nested `form`, and each action is a `button[type="button"]`.
@@ -22,7 +22,7 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 5. Confirm the POST passes GLPI's automatic kernel CSRF listener and the legacy `action.form.php` controller executes without attempting a second CSRF validation.
 6. Confirm the response does not return HTTP 403, redirects back to the canonical Ticket URL, and adds the current technician.
 7. Confirm the existing assigned group remains assigned and `access-errors.log` contains no new CSRF failure.
-8. Exercise Pending, Resume, and Release Assignment. Confirm each executes and uses the same standalone POST mechanism.
+8. Exercise Release Assignment, Pending, Resume, Solve, Close, and Reopen where eligible. Confirm each uses the same standalone POST mechanism.
 9. Confirm native History records the changes and no requester-visible followup is created.
 10. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
 11. Temporarily remove or blank all native `_glpi_csrf_token` inputs, click an action, and confirm no POST occurs, the button is restored, and a concise console error appears.
@@ -55,8 +55,29 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 1. Permit the current status -> Pending transition and click **Pending**. Confirm only status changes and all assignments remain.
 2. Deny that transition. Confirm the button is hidden and a crafted POST is rejected.
 3. On Pending, permit Pending -> Processing (Assigned), click **Resume**, and confirm assignments remain.
-4. Deny Pending -> Processing (Assigned). Confirm the button is hidden and a crafted POST is rejected.
-5. Confirm status changes appear in native History with no followup records.
+4. On a Pending ticket without an assigned technician or group, permit Pending -> New, click **Resume**, and confirm the status becomes New.
+5. Deny the applicable Resume transition. Confirm the button is hidden and a crafted POST is rejected.
+6. Confirm status changes appear in native History with no followup records.
+
+## Solve, Close, and Reopen
+
+The expected lifecycle is `Active -> Solve -> Solved -> Close -> Closed`, with Reopen available from Solved and Closed. GLPI profile rights and lifecycle configuration remain authoritative.
+
+1. On a New ticket with an assigned group but no technician, confirm Assign to Me, Pending, and Solve appear when permitted; Close and Reopen must not appear.
+2. On a Processing (Assigned) ticket assigned to the current user, confirm Release Assignment, Pending, and Solve appear when permitted; Close and Reopen must not appear.
+3. On a Pending ticket, confirm Resume appears, Pending does not, and Solve appears only when Pending -> Solved is allowed.
+4. On a Solved ticket, confirm Close and Reopen appear when permitted. Confirm Solve, Pending, and Resume are absent; assignment actions appear only when independently valid.
+5. On a Closed ticket, confirm Reopen appears when permitted and Solve and Close are absent.
+6. Click Solve, Close, and Reopen individually and confirm each displays its named confirmation. Cancel each once and verify the button is restored and no network request occurs.
+7. With an existing assigned technician or assigned group, confirm Reopen targets Processing (Assigned) and preserves every assignment.
+8. With no assigned technician or group, confirm Reopen targets New.
+9. Where GLPI requires a solution, attempt Solve without one. Confirm the request is rejected cleanly, the message directs the technician to Add Solution, and the status does not change.
+10. Add a solution through GLPI's normal workflow where needed, then exercise the permitted lifecycle action. Do not create solution content through the quick-action request.
+11. Deny each relevant lifecycle transition in the profile matrix. Confirm the action is hidden and a stale or crafted POST is rejected with a clear transition message.
+12. Repeat without the corresponding update, solve, close, or reopen right. Confirm the action is hidden and crafted POSTs receive clear permission errors.
+13. After Solve, Close, and Reopen, confirm requester, observer, technician, group, location, category, and Additional Fields data are unchanged.
+14. After Reopen, confirm the existing solution remains attached and no solution is deleted.
+15. Confirm every successful transition redirects to the Ticket, creates native History entries, creates no requester-visible followup, and produces no PHP warning or browser-console error.
 
 ## Security and routing
 

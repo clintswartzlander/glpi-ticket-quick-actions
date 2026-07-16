@@ -4,6 +4,20 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-07-16
+
+### Added
+
+- Context-aware Solve, Close, and Reopen actions using native GLPI Ticket updates and lifecycle rules.
+- Assignment-aware Resume and Reopen targets: Processing (Assigned) with a technician or assigned group, otherwise New.
+- Named confirmations for Solve, Close, and Reopen with cancellation before any request is created.
+- Contract coverage for lifecycle visibility, transition targets, permissions, solution requirements, data preservation, confirmation, and CSRF architecture.
+
+### Changed
+
+- Restricted Pending to active non-pending states.
+- Detects a rejected status-only Solve without an existing solution and directs technicians to GLPI's Add Solution workflow.
+
 ## [1.0.4] - 2026-07-16
 
 ### Fixed
@@ -46,7 +60,8 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 - Responsive light/dark-compatible scoped styling.
 - Automated lint, contract tests, CI, release packaging, and manual QA documentation.
 
-[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.4...HEAD
+[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.4...v1.1.0
 [1.0.4]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...v1.0.2

@@ -18,6 +18,14 @@
     }
 
     event.preventDefault();
+    var confirmation = button.dataset.quickactionsConfirmation;
+    if (confirmation && !window.confirm(confirmation)) {
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      delete button.dataset.quickactionsBusy;
+      return;
+    }
+
     button.dataset.quickactionsBusy = 'true';
     button.disabled = true;
     button.setAttribute('aria-busy', 'true');

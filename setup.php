@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Glpi\Plugin\Hooks;
 use GlpiPlugin\Quickactions\PanelRenderer;
 
-define('PLUGIN_QUICKACTIONS_VERSION', '1.0.4');
+define('PLUGIN_QUICKACTIONS_VERSION', '1.1.0');
 define('PLUGIN_QUICKACTIONS_MIN_GLPI', '11.0.0');
 define('PLUGIN_QUICKACTIONS_MAX_GLPI', '12.0.0');
 

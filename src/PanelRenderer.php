@@ -27,6 +27,14 @@ final class PanelRenderer
             Action::RELEASE => [__('Release Assignment', 'quickactions'), 'ti ti-user-minus'],
             Action::PENDING => [__('Pending', 'quickactions'), 'ti ti-player-pause'],
             Action::RESUME => [__('Resume', 'quickactions'), 'ti ti-player-play'],
+            Action::SOLVE => [__('Solve', 'quickactions'), 'ti ti-circle-check'],
+            Action::CLOSE => [__('Close', 'quickactions'), 'ti ti-lock'],
+            Action::REOPEN => [__('Reopen', 'quickactions'), 'ti ti-refresh'],
+        ];
+        $confirmations = [
+            Action::SOLVE => __('Mark this ticket as solved?', 'quickactions'),
+            Action::CLOSE => __('Close this solved ticket?', 'quickactions'),
+            Action::REOPEN => __('Reopen this ticket?', 'quickactions'),
         ];
         $endpoint = $CFG_GLPI['root_doc'] . '/plugins/quickactions/front/action.form.php';
 
@@ -42,7 +50,12 @@ final class PanelRenderer
             echo ' data-quickactions-control="true"';
             echo ' data-quickactions-endpoint="' . htmlescape($endpoint) . '"';
             echo ' data-quickactions-ticket-id="' . (int) $ticket->getID() . '"';
-            echo ' data-quickactions-action="' . htmlescape($action) . '">';
+            echo ' data-quickactions-action="' . htmlescape($action) . '"';
+            if (isset($confirmations[$action])) {
+                echo ' data-quickactions-confirmation="'
+                    . htmlescape($confirmations[$action]) . '"';
+            }
+            echo '>';
             echo '<i class="' . htmlescape($icon) . '" aria-hidden="true"></i>';
             echo '<span class="spinner-border spinner-border-sm quickactions-panel__spinner"'
                 . ' aria-hidden="true"></span>';
