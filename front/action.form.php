@@ -13,7 +13,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
 }
 
 Session::checkCentralAccess();
-Session::checkCSRF($_POST);
+
+// GLPI 11 validates CSRF automatically before legacy plugin controllers execute.
+// Adding another Session::checkCSRF call here would validate the one-time token
+// twice and incorrectly reject an otherwise valid request.
 
 $ticketId = filter_var($_POST['tickets_id'] ?? null, FILTER_VALIDATE_INT, [
     'options' => ['min_range' => 1],

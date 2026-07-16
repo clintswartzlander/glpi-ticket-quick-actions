@@ -47,7 +47,9 @@ $setup = file_get_contents($root . '/setup.php');
 
 $assert(strpos($controller, "\$_SERVER['REQUEST_METHOD']") !== false, 'Controller is not POST-only.');
 $assert(strpos($controller, "!== 'POST'") !== false, 'Controller does not reject non-POST requests.');
-$assert(strpos($controller, 'Session::checkCSRF($_POST)') !== false, 'Controller does not use GLPI CSRF validation.');
+$assert(strpos($controller, 'Session::checkCSRF(') === false, 'Controller redundantly validates GLPI CSRF tokens.');
+$assert(strpos($controller, 'Session::checkCentralAccess()') !== false, 'Controller does not enforce central access.');
+$assert(strpos($controller, 'GLPI 11 validates CSRF automatically') !== false, 'Controller lacks the GLPI 11 CSRF listener explanation.');
 $assert(strpos($controller, 'Ticket::getFormURLWithID') !== false, 'Controller lacks canonical ticket redirect.');
 $assert(strpos($controller, 'Ticket::getSearchURL') !== false, 'Controller lacks canonical list redirect.');
 $assert(strpos($service, 'canAssignToMe()') !== false, 'Assignment does not use canAssignToMe().');
@@ -97,7 +99,20 @@ $assert(strpos($javascript, 'tickets_id') !== false, 'Standalone form omits the 
 $assert(strpos($javascript, 'form.submit()') !== false, 'Standalone form is not normally submitted.');
 $assert(strpos($javascript, 'window[handlerFlag]') !== false, 'JavaScript lacks duplicate-handler protection.');
 $assert(strpos($javascript, 'button.disabled = true') !== false, 'JavaScript does not prevent double-click execution.');
-$assert(strpos($setup, "PLUGIN_QUICKACTIONS_VERSION', '1.0.3'") !== false, 'Plugin version is not 1.0.3.');
+$assert(strpos($setup, "PLUGIN_QUICKACTIONS_VERSION', '1.0.4'") !== false, 'Plugin version is not 1.0.4.');
+
+$csrfEntryPoints = implode("\n", [$setup, file_get_contents($root . '/hook.php'), $controller]);
+$csrfBypassMarkers = [
+    'skip_csrf',
+    'disable_csrf',
+    'csrf_compliant',
+    'preserve_token',
+    'GLPI_SKIP_CSRF_CHECK',
+    'CheckCsrfListener',
+];
+foreach ($csrfBypassMarkers as $marker) {
+    $assert(stripos($csrfEntryPoints, $marker) === false, sprintf('GLPI CSRF bypass marker found: %s', $marker));
+}
 
 $runtimeFiles = [
     $root . '/setup.php',

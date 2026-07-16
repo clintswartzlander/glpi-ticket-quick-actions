@@ -4,6 +4,14 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-07-16
+
+### Fixed
+
+- Removed redundant controller-level CSRF validation because GLPI 11's kernel listener already validates and consumes the one-time token before legacy plugin controllers execute.
+- Retained native GLPI token submission, POST-only routing, and central-interface enforcement without bypassing the global CSRF listener.
+- Added contract coverage preventing a second controller check and known CSRF-listener bypass mechanisms.
+
 ## [1.0.3] - 2026-07-16
 
 ### Fixed
@@ -38,7 +46,8 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 - Responsive light/dark-compatible scoped styling.
 - Automated lint, contract tests, CI, release packaging, and manual QA documentation.
 
-[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.0...v1.0.1

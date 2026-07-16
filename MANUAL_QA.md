@@ -6,7 +6,7 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Installation and rendering
 
-1. Confirm the plugin reports version 1.0.3, GPL-3.0-or-later, and installs without a database migration.
+1. Deploy version 1.0.4, clear the GLPI cache, and confirm the plugin reports version 1.0.4, GPL-3.0-or-later, with no database migration.
 2. Open a new/unsaved Ticket form. Confirm the Quick Actions panel is absent.
 3. Open a saved Ticket in the central interface with a user who can view it. Confirm the panel is present and its buttons reflect the ticket state and rights.
 4. Inspect the Ticket form DOM. Confirm the panel renders once, contains no nested `form`, and each action is a `button[type="button"]`.
@@ -15,18 +15,20 @@ For actor-preservation scenarios, begin with a ticket that has two assigned tech
 
 ## Submission architecture
 
-1. Open a fresh saved Ticket page, open browser developer tools, and preserve the Network log.
+1. Hard-refresh a saved Ticket page, open browser developer tools, and preserve the Network log.
 2. Confirm the page contains native GLPI hidden inputs named `_glpi_csrf_token` within the Ticket or another GLPI form.
 3. Click **Assign to Me** once. Confirm the button disables immediately and shows its busy state.
 4. Confirm exactly one normal document POST is sent to `/plugins/quickactions/front/action.form.php` with `_glpi_csrf_token`, `tickets_id`, and `action` form fields.
-5. Confirm the POST no longer returns HTTP 403, redirects back to the canonical Ticket URL, and adds the current technician.
-6. Confirm the existing assigned group remains assigned and `access-errors.log` contains no new CSRF failure.
-7. Exercise Pending, Resume, and Release Assignment. Confirm each passes CSRF validation and uses the same standalone POST mechanism.
-8. Confirm native History records the changes and no requester-visible followup is created.
-9. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
-10. Temporarily remove or blank all native `_glpi_csrf_token` inputs, click an action, and confirm no POST occurs, the button is restored, and a concise console error appears.
-11. Reload or dynamically refresh the Ticket panel multiple times where possible. Confirm one click still produces one POST, demonstrating that the JavaScript handler registered only once.
-12. Confirm the browser console has no unexpected errors and the GLPI/PHP logs have no new warnings.
+5. Confirm the POST passes GLPI's automatic kernel CSRF listener and the legacy `action.form.php` controller executes without attempting a second CSRF validation.
+6. Confirm the response does not return HTTP 403, redirects back to the canonical Ticket URL, and adds the current technician.
+7. Confirm the existing assigned group remains assigned and `access-errors.log` contains no new CSRF failure.
+8. Exercise Pending, Resume, and Release Assignment. Confirm each executes and uses the same standalone POST mechanism.
+9. Confirm native History records the changes and no requester-visible followup is created.
+10. Rapidly click or double-click every action. Confirm only one request is initiated per rendered button.
+11. Temporarily remove or blank all native `_glpi_csrf_token` inputs, click an action, and confirm no POST occurs, the button is restored, and a concise console error appears.
+12. Send crafted POSTs with a missing or invalid CSRF token. Confirm GLPI rejects each before the plugin controller executes.
+13. Reload or dynamically refresh the Ticket panel multiple times where possible. Confirm one click still produces one POST, demonstrating that the JavaScript handler registered only once.
+14. Confirm the browser console has no unexpected errors and the GLPI/PHP logs have no new warnings.
 
 ## Assign to Me
 
