@@ -22,6 +22,25 @@
     button.disabled = true;
     button.setAttribute('aria-busy', 'true');
 
+    var container = button.closest('#itil-object-container');
+    var csrfInput = container
+      ? container.querySelector('input[name="_glpi_csrf_token"]')
+      : null;
+
+    if (!csrfInput) {
+      csrfInput = document.querySelector(
+        'form input[name="_glpi_csrf_token"]'
+      );
+    }
+
+    if (!csrfInput || csrfInput.value.trim() === '') {
+      button.disabled = false;
+      button.removeAttribute('aria-busy');
+      delete button.dataset.quickactionsBusy;
+      console.error('Quick Actions: GLPI CSRF token not found.');
+      return;
+    }
+
     var form = document.createElement('form');
     form.method = 'post';
     form.action = button.dataset.quickactionsEndpoint;
@@ -29,7 +48,7 @@
     form.setAttribute('aria-hidden', 'true');
 
     var fields = {
-      _glpi_csrf_token: button.dataset.quickactionsCsrfToken,
+      _glpi_csrf_token: csrfInput.value,
       tickets_id: button.dataset.quickactionsTicketId,
       action: button.dataset.quickactionsAction
     };

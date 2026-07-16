@@ -60,16 +60,8 @@ $assert(strpos($statusPreservingRelation, "'status'") === false, 'Status-neutral
 $assert(strpos($renderer, "getCurrentInterface() === 'central'") === false, 'Renderer should delegate interface checks to the service.');
 $assert(stripos($renderer, '<form') === false, 'PanelRenderer outputs a nested form.');
 $assert(strpos($renderer, '<button type="button"') !== false, 'Quick actions are not non-submit buttons.');
-$assert(strpos($renderer, 'data-quickactions-csrf-token') !== false, 'Renderer does not expose a server-generated CSRF token.');
-$assert(strpos($renderer, 'getNewCSRFToken(true)') === false, 'Renderer requests a standalone CSRF token.');
-$assert(substr_count($renderer, '\\Session::getNewCSRFToken()') === 1, 'Renderer must generate exactly one shared CSRF token.');
-$tokenPosition = strpos($renderer, '$csrfToken = \\Session::getNewCSRFToken();');
-$loopPosition = strpos($renderer, 'foreach ($actions as $action)');
-$assert(
-    $tokenPosition !== false && $loopPosition !== false && $tokenPosition < $loopPosition,
-    'Renderer must generate the shared CSRF token before the action loop.'
-);
-$assert(strpos($renderer, 'htmlescape($csrfToken)') !== false, 'Rendered actions do not use the shared CSRF token.');
+$assert(strpos($renderer, 'getNewCSRFToken') === false, 'Renderer generates a CSRF token.');
+$assert(strpos($renderer, 'data-quickactions-csrf-token') === false, 'Renderer exposes a CSRF data attribute.');
 $assert(strpos($renderer, 'data-quickactions-ticket-id') !== false, 'Renderer does not expose the ticket ID.');
 $assert(strpos($renderer, 'data-quickactions-action') !== false, 'Renderer does not expose the action.');
 $assert(strpos($setup, 'POST_ITIL_INFO_SECTION') !== false, 'GLPI 11 ITIL panel hook is not registered.');
@@ -80,12 +72,32 @@ $assert(is_file($root . '/public/js/quickactions.js'), 'Registered JavaScript as
 $assert(strpos($javascript, "document.createElement('form')") !== false, 'JavaScript does not create a standalone form.');
 $assert(strpos($javascript, "form.method = 'post'") !== false, 'Standalone form is not POST.');
 $assert(strpos($javascript, 'document.body.appendChild(form)') !== false, 'Standalone form is not attached directly to body.');
-$assert(strpos($javascript, '_glpi_csrf_token') !== false, 'Standalone form omits the CSRF token.');
+$assert(strpos($javascript, "button.closest('#itil-object-container')") !== false, 'JavaScript does not scope the primary CSRF lookup.');
+$assert(strpos($javascript, "container.querySelector('input[name=\"_glpi_csrf_token\"]')") !== false, 'JavaScript does not query the Ticket container for GLPI\'s CSRF input.');
+$assert(strpos($javascript, "document.querySelector(") !== false, 'JavaScript lacks the fallback CSRF lookup.');
+$assert(strpos($javascript, "'form input[name=\"_glpi_csrf_token\"]'") !== false, 'JavaScript does not query a fallback form for GLPI\'s CSRF input.');
+$assert(strpos($javascript, "!csrfInput || csrfInput.value.trim() === ''") !== false, 'JavaScript does not reject a missing or blank CSRF token.');
+$missingTokenPosition = strpos($javascript, "if (!csrfInput || csrfInput.value.trim() === '')");
+$missingTokenReturnPosition = strpos($javascript, 'return;', $missingTokenPosition ?: 0);
+$formPosition = strpos($javascript, "document.createElement('form')");
+$assert(
+    $missingTokenPosition !== false
+    && $missingTokenReturnPosition !== false
+    && $formPosition !== false
+    && $missingTokenPosition < $missingTokenReturnPosition
+    && $missingTokenReturnPosition < $formPosition,
+    'JavaScript does not stop before form creation when the CSRF token is missing or blank.'
+);
+$assert(strpos($javascript, 'button.disabled = false') !== false, 'Missing-token handling does not re-enable the button.');
+$assert(strpos($javascript, "button.removeAttribute('aria-busy')") !== false, 'Missing-token handling does not clear aria-busy.');
+$assert(strpos($javascript, 'delete button.dataset.quickactionsBusy') !== false, 'Missing-token handling does not clear the busy flag.');
+$assert(strpos($javascript, "console.error('Quick Actions: GLPI CSRF token not found.')") !== false, 'Missing-token handling does not log a concise console error.');
+$assert(strpos($javascript, '_glpi_csrf_token: csrfInput.value') !== false, 'Standalone form does not use GLPI\'s existing CSRF token.');
 $assert(strpos($javascript, 'tickets_id') !== false, 'Standalone form omits the ticket ID.');
 $assert(strpos($javascript, 'form.submit()') !== false, 'Standalone form is not normally submitted.');
 $assert(strpos($javascript, 'window[handlerFlag]') !== false, 'JavaScript lacks duplicate-handler protection.');
 $assert(strpos($javascript, 'button.disabled = true') !== false, 'JavaScript does not prevent double-click execution.');
-$assert(strpos($setup, "PLUGIN_QUICKACTIONS_VERSION', '1.0.2'") !== false, 'Plugin version is not 1.0.2.');
+$assert(strpos($setup, "PLUGIN_QUICKACTIONS_VERSION', '1.0.3'") !== false, 'Plugin version is not 1.0.3.');
 
 $runtimeFiles = [
     $root . '/setup.php',

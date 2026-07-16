@@ -2,7 +2,7 @@
 
 Ticket Quick Actions is a small GLPI 11 plugin that adds a dedicated action panel to saved Ticket pages in the standard interface.
 
-Current version: **1.0.2**
+Current version: **1.0.3**
 
 It provides four focused actions:
 
@@ -31,9 +31,9 @@ No database migration is performed.
 ## Security model
 
 - The panel is not rendered in the Self-Service/helpdesk interface.
-- Every action is POST-only and uses a one-time GLPI CSRF token.
+- Every action is POST-only and reuses a valid CSRF token from GLPI's native Ticket-page forms.
 - Quick-action controls are `type="button"`, so they never create nested forms inside GLPI's Ticket edit form. A scoped JavaScript handler creates a temporary standalone form under `document.body` and performs a normal POST to the plugin endpoint; no AJAX is used.
-- The handler registers once, disables the clicked control immediately, and prevents repeated execution while navigation is pending.
+- The handler registers once, disables the clicked control immediately, and prevents repeated execution while navigation is pending. If no non-empty native GLPI CSRF token is available, it cancels submission and restores the control.
 - The endpoint re-loads the ticket and repeats visibility, interface, assignment, update, and lifecycle checks server-side.
 - Redirects are built only with `Ticket::getFormURLWithID()` or `Ticket::getSearchURL()`.
 - Expected denials become generic GLPI messages. Unexpected exceptions are written to GLPI's PHP error log and are not shown to users.

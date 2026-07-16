@@ -4,6 +4,14 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-07-16
+
+### Fixed
+
+- Reused a native GLPI Ticket-page CSRF token at click time instead of generating tokens from the `POST_ITIL_INFO_SECTION` hook.
+- Cancelled submission and restored the quick-action control when no non-empty native token is available.
+- Added contract coverage for native token lookup, missing-token handling, and the absence of renderer-generated CSRF data.
+
 ## [1.0.2] - 2026-07-16
 
 ### Fixed
@@ -30,7 +38,8 @@ All notable changes to Ticket Quick Actions are documented here. The format foll
 - Responsive light/dark-compatible scoped styling.
 - Automated lint, contract tests, CI, release packaging, and manual QA documentation.
 
-[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.2...HEAD
+[Unreleased]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/clintswartzlander/glpi-ticket-quick-actions/releases/tag/v1.0.0

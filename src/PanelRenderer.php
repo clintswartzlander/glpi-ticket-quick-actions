@@ -29,7 +29,6 @@ final class PanelRenderer
             Action::RESUME => [__('Resume', 'quickactions'), 'ti ti-player-play'],
         ];
         $endpoint = $CFG_GLPI['root_doc'] . '/plugins/quickactions/front/action.form.php';
-        $csrfToken = \Session::getNewCSRFToken();
 
         echo '<section class="quickactions-panel" aria-labelledby="quickactions-title">';
         echo '<div class="quickactions-panel__heading">';
@@ -42,8 +41,6 @@ final class PanelRenderer
             echo '<button type="button" class="btn btn-outline-secondary quickactions-panel__button"';
             echo ' data-quickactions-control="true"';
             echo ' data-quickactions-endpoint="' . htmlescape($endpoint) . '"';
-            echo ' data-quickactions-csrf-token="'
-                . htmlescape($csrfToken) . '"';
             echo ' data-quickactions-ticket-id="' . (int) $ticket->getID() . '"';
             echo ' data-quickactions-action="' . htmlescape($action) . '">';
             echo '<i class="' . htmlescape($icon) . '" aria-hidden="true"></i>';
