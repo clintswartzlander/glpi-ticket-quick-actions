@@ -1,0 +1,22 @@
+{
+  "name": "clintswartzlander/glpi-ticket-quick-actions",
+  "description": "Secure quick actions for GLPI 11 ticket pages",
+  "type": "glpi-plugin",
+  "license": "GPL-3.0-or-later",
+  "require": {
+    "php": ">=8.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "GlpiPlugin\\Quickactions\\": "src/"
+    }
+  },
+  "scripts": {
+    "lint": "@php tests/lint.php",
+    "test": "@php tests/run.php",
+    "package": "@php scripts/package-release.php"
+  },
+  "config": {
+    "sort-packages": true
+  }
+}
